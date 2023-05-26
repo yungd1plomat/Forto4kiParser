@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33103.201
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forto4kiParser", "Forto4kiParser\Forto4kiParser.csproj", "{B4C203C0-7000-4AB8-A5C7-154A4FF942EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4C203C0-7000-4AB8-A5C7-154A4FF942EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4C203C0-7000-4AB8-A5C7-154A4FF942EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4C203C0-7000-4AB8-A5C7-154A4FF942EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4C203C0-7000-4AB8-A5C7-154A4FF942EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3D21FF1-46EE-4E1A-843E-FD80F93DE402}
+	EndGlobalSection
+EndGlobal

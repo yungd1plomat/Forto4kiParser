@@ -1,0 +1,50 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    background-color: #181a20;
+}
+
+@media only screen and (max-width:800px) {
+    #responsive-table tbody, #responsive-table tr, #responsive-table td
+
+{
+    display: block;
+}
+
+#responsive-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+}
+
+#responsive-table td {
+    position: relative;
+    padding-left: 50%;
+    border: none;
+    border-bottom: 1px solid #eee;
+}
+
+    #responsive-table td:before {
+        content: attr(data-title);
+        position: absolute;
+        left: 6px;
+        font-weight: bold;
+    }
+
+#responsive-table tr {
+    border-bottom: 1px solid #ccc;
+}
+}

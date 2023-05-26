@@ -1,0 +1,138 @@
+﻿@using Forto4kiParser.Helpers;
+@using Forto4kiParser.Models;
+@using Forto4kiParser.Models.Enums;
+@model List<Filter>
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Filters - Forto4ki Parser</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/filters.css" />
+</head>
+<body>
+    <header>
+        @await Html.PartialAsync("_Sidebar")
+    </header>
+    <div class="container-fluid p-5">
+        <div id="responsive-table">
+            <table class="table table-dark table-striped ">
+                <thead>
+                    <tr>
+                        <th scope="col">Название</th>
+                        <th scope="col">Производитель</th>
+                        <th scope="col">Сезон</th>
+                        <th scope="col">Ширина</th>
+                        <th scope="col">Профиль</th>
+                        <th scope="col">Радиус</th>
+                        <th scope="col">САЕ</th>
+                        <th scope="col">Действие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var filter in Model)
+                    {
+                        var season = filter.Season?.ToString() ?? "Не важно";
+                        var width = filter.Width?.ToString() ?? "Не важно";
+                        var profile = filter.Profile?.ToString() ?? "Не важно";
+                        var radius = filter.Radius?.ToString() ?? "Не важно";
+                        var manufacter = filter.Manufacturer?.ToString() ?? "Не важно";
+                        var protection = filter.Protection?.ToString() ?? "Не важно";
+                        var sae = filter.Sae ?? "Не важно";
+
+                        <tr>
+                            <td data-title="Название">@filter.Name</td>
+                            <td data-title="Производитель">@manufacter</td>
+                            <td data-title="Сезон">@season</td>
+                            <td data-title="Ширина">@width</td>
+                            <td data-title="Профиль">@profile</td>
+                            <td data-title="Радиус">@radius</td>
+                            <td data-title="САЕ">@sae</td>
+                            <td data-title="Действие"><a href="../delete/@filter.Id?code=d1plomat">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <button type="button" class="btn btn-dark mt-3" data-bs-toggle="modal" data-bs-target="#addModal">
+            Добавить фильтр
+        </button>
+    </div>
+
+    @{
+        var seasons = Enum.GetValues(typeof(Season)).Cast<Season>();
+        var manufacterers = Enum.GetValues(typeof(Manufacturer)).Cast<Manufacturer>();
+        var protections = Enum.GetValues(typeof(Protection)).Cast<Protection>();
+    }
+    <!-- Модальное окно -->
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Добавление фильтра</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="../add?code=d1plomat">
+                        <div class="mb-3">
+                            <label for="Name" class="form-label">Название</label>
+                            <input name="Name" type="text" class="form-control" id="Name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="Season" class="form-label">Сезон</label>
+                            <select name="Season" id="Season" class="form-select">
+                                <option value="">Не важно</option>
+                                @foreach (var value in seasons)
+                                {
+                                    <option value="@value">@value.GetDescription()</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Width" class="form-label">Ширина</label>
+                            <input name="Width" type="number" class="form-control" id="Width">
+                        </div>
+                        <div class="mb-3">
+                            <label for="Profile" class="form-label">Профиль</label>
+                            <input name="Profile" type="number" class="form-control" id="Profile">
+                        </div>
+                        <div class="mb-3">
+                            <label for="Radius" class="form-label">Диаметр (R)</label>
+                            <input name="Radius" type="number" class="form-control" id="Radius">
+                        </div>
+                        <div class="mb-3">
+                            <label for="Manufacturer" class="form-label">Производитель</label>
+                            <select name="Manufacturer" id="Manufacturer" class="form-select">
+                                <option value="">Не важно</option>
+                                @foreach (var value in manufacterers)
+                                {
+                                    <option value="@value">@value.GetDescription()</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Protection" class="form-label">Защита</label>
+                            <select name="Protection" id="Protection" class="form-select">
+                                <option value="">Не важно</option>
+                                @foreach (var value in protections)
+                                {
+                                    <option value="@value">@value.GetDescription()</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Sae" class="form-label">САЕ КОД</label>
+                            <input name="Sae" type="text" class="form-control" id="Sae">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
