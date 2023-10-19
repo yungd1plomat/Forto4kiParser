@@ -18,6 +18,10 @@ namespace Forto4kiParser.Models
 
         public Season? Season { get; set; }
 
+        public bool NearbyWarehouses { get; set; }
+
+        public bool DistantWarehouses { get; set; }
+
         public Manufacturer? Manufacturer { get; set; }
 
         public Protection? Protection { get; set; }

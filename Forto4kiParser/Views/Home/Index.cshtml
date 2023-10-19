@@ -78,7 +78,7 @@
                     <form method="post" action="../add?code=d1plomat">
                         <div class="mb-3">
                             <label for="Name" class="form-label">Название</label>
-                            <input name="Name" type="text" class="form-control" id="Name">
+                            <input name="Name" type="text" class="form-control" id="Name" required>
                         </div>
                         <div class="mb-3">
                             <label for="Season" class="form-label">Сезон</label>
@@ -125,6 +125,17 @@
                         <div class="mb-3">
                             <label for="Sae" class="form-label">САЕ КОД</label>
                             <input name="Sae" type="text" class="form-control" id="Sae">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Склады</label>
+                            <div class="form-check">
+                                <label class="form-check-label" for="nearby">Ближние склады</label>
+                                <input name="NearbyWarehouses" id="nearby" type="checkbox" value="true" class="form-check-input" checked>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label" for="distant">Дальние склады</label>
+                                <input class="form-check-input" type="checkbox" id="distant" value="true" name="DistantWarehouses">
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Добавить</button>
                     </form>

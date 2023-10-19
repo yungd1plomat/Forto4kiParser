@@ -13,6 +13,8 @@ namespace Forto4kiParser.Services
 {
     public class ParserService : IParserService
     {
+        const int MAX_PAGE = 245;
+
         const string Url = "https://b2b.4tochki.ru";
 
         private HttpClient _client;
@@ -46,7 +48,11 @@ namespace Forto4kiParser.Services
             sb.Append(filter.Sae);
             sb.Append("&fc_vc=&ft_p=");
             sb.Append(Convert.ToInt32(filter.Protection));
-            sb.Append("&fc_wh=1&fc_wh=232&fc_wh=9&fc_wh=3&fc_wh=4&fc_pn=");
+            if (filter.NearbyWarehouses)
+                sb.Append("&fc_wh=1&fc_wh=232&fc_wh=9&fc_wh=3&fc_wh=4");
+            if (filter.DistantWarehouses)
+                sb.Append("&fc_wh=1046&fc_wh=755&fc_wh=154&fc_wh=949&fc_wh=846&fc_wh=115&fc_wh=766&fc_wh=46&fc_wh=313&fc_wh=57&fc_wh=22&fc_wh=689&fc_wh=853&fc_wh=43&fc_wh=865&fc_wh=42&fc_wh=562&fc_wh=1278&fc_wh=1015");
+            sb.Append("&fc_pn=");
             sb.Append(page);
             return sb.ToString();
         }
@@ -54,7 +60,7 @@ namespace Forto4kiParser.Services
         public async Task<IEnumerable<Tyre>> GetTyres(Filter filter)
         {
             List<Tyre> tyres = new List<Tyre>();
-            for (int page = 0; page < 245; page++)
+            for (int page = 0; page < MAX_PAGE; page++)
             {
                 var url = BuildUrl(filter, page);
                 try
