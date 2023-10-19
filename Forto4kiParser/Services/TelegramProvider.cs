@@ -4,6 +4,7 @@ using Forto4kiParser.Models;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Concurrent;
 using System.Text;
+using System.Xml;
 
 namespace Forto4kiParser.Services
 {
@@ -11,7 +12,7 @@ namespace Forto4kiParser.Services
     {
         private readonly string _channelId;
 
-        private ConcurrentQueue<MessageParams> _messageQueue { get; set; }
+        private readonly ConcurrentQueue<MessageParams> _messageQueue;
 
         public TelegramProvider(string channelId)
         {
@@ -30,6 +31,47 @@ namespace Forto4kiParser.Services
                 Photo = photoUrl,
             };
             _messageQueue.Enqueue(messageParams);
+        }
+
+        public void EnqueueOrder(Tyre tyre, bool isSuccess, int quantity)
+        {
+            var description = GenerateOrderDescription(tyre, isSuccess, quantity);
+            var photoUrl = tyre.PhotoUrl;
+            var messageParams = new MessageParams()
+            {
+                ChatId = _channelId,
+                Description = description,
+                Photo = photoUrl,
+            };
+            _messageQueue.Enqueue(messageParams);
+        }
+
+        public string GenerateOrderDescription(Tyre tyre, bool isSuccess, int quantity)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("*Новый заказ*");
+
+            sb.AppendLine();
+            sb.AppendLine();
+
+            sb.Append("*");
+            sb.Append(tyre.Brand.Escape());
+            sb.AppendLine();
+            sb.Append(tyre.Name.Escape());
+            sb.Append("*");
+
+            sb.AppendLine();
+            sb.AppendLine();
+
+            sb.Append("*Успешно*: ");
+            sb.Append(isSuccess);
+
+            sb.AppendLine();
+            sb.AppendLine();
+
+            sb.Append("*Количество*: ");
+            sb.Append(quantity);
+            return sb.ToString();
         }
 
         public string GenerateDescription(Tyre tyre)

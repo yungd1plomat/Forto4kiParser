@@ -10,14 +10,14 @@ namespace Forto4kiParser.Abstractions
         /// <returns>
         /// Объект Шина - количество
         /// </returns>
-        Task<KeyValuePair<Tyre, int>> GetQueueOrder();
+        KeyValuePair<Tyre, int>? GetQueueOrder();
 
         /// <summary>
         /// Добавляет шину на заказ в очередь
         /// </summary>
-        /// <param name="tyre"></param>
-        /// <param name="chunkCount"></param>
-        /// <param name="maxCount"></param>
-        void Enqueue(Tyre tyre, int chunkCount, int maxCount);
+        /// <param name="tyre">Шина которую необходимо заказать</param>
+        /// <param name="chunkSize">Максимальное количество в заказе</param>
+        /// <param name="maxCount">Максимальное количество заказов</param>
+        void Enqueue(Tyre tyre, int chunkSize, int maxCount);
     }
 }

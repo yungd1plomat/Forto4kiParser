@@ -2,7 +2,6 @@
 using Forto4kiParser.Data;
 using Forto4kiParser.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Forto4kiParser
 {
@@ -27,8 +26,12 @@ namespace Forto4kiParser
 
             services.AddSingleton<IParserService, ParserService>();
             services.AddSingleton<ITelegramProvider, TelegramProvider>(service => new TelegramProvider(channelId));
+            services.AddSingleton<IOrderProvider, OrderProvider>();
+
             services.AddHostedService(service => new TelegramService(botToken, service.GetRequiredService<ITelegramProvider>()));
+            services.AddHostedService<OrderService>();
             services.AddHostedService<MonitorService>();
+            services.AddHostedService<CancelOrderService>();
             services.AddControllersWithViews();
         }
 
@@ -36,7 +39,6 @@ namespace Forto4kiParser
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-            app.UseHsts();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
