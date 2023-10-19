@@ -17,17 +17,21 @@ namespace Forto4kiParser.Services
 
         private readonly IParserService _parserService;
 
+        private readonly IOrderProvider _orderProvider;
+
         public MonitorService(IMemoryCache memoryCache, 
                               IServiceScopeFactory scopeFactory, 
                               ILogger<MonitorService> logger, 
                               ITelegramProvider telegramProvider, 
-                              IParserService parserService)
+                              IParserService parserService,
+                              IOrderProvider orderProvider)
         {
             _cache = memoryCache;
             _scopeFactory = scopeFactory;
             _logger = logger;
             _telegramProvider = telegramProvider;
             _parserService = parserService;
+            _orderProvider = orderProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -52,6 +56,10 @@ namespace Forto4kiParser.Services
                                     AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24)
                                 });
                                 _telegramProvider.Enqueue(tyre);
+                                if (filter.AutoBuy && filter.ChunkSize is not null && filter.MaxCount is not null)
+                                {
+                                    _orderProvider.Enqueue(tyre, (int)filter.ChunkSize, (int)filter.MaxCount);
+                                }
                                 parsed++;
                             }
                         }

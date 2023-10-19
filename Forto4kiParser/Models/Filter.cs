@@ -22,6 +22,12 @@ namespace Forto4kiParser.Models
 
         public bool DistantWarehouses { get; set; }
 
+        public bool AutoBuy { get; set; }
+
+        public int? ChunkSize { get; set; }
+
+        public int? MaxCount { get; set; }
+
         public Manufacturer? Manufacturer { get; set; }
 
         public Protection? Protection { get; set; }
