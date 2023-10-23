@@ -56,9 +56,12 @@ namespace Forto4kiParser.Services
                                     AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24)
                                 });
                                 _telegramProvider.Enqueue(tyre);
-                                if (filter.AutoBuy && filter.ChunkSize is not null && filter.MaxCount is not null)
+                                if (filter.AutoBuy && 
+                                    filter.ChunkSize is not null && 
+                                    filter.MaxCount is not null &&
+                                    filter.MinCount is not null)
                                 {
-                                    _orderProvider.Enqueue(tyre, (int)filter.ChunkSize, (int)filter.MaxCount);
+                                    _orderProvider.Enqueue(tyre, (int)filter.ChunkSize, (int)filter.MinCount, (int)filter.MaxCount);
                                 }
                                 parsed++;
                             }

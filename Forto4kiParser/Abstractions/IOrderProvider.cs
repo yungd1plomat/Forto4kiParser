@@ -17,7 +17,8 @@ namespace Forto4kiParser.Abstractions
         /// </summary>
         /// <param name="tyre">Шина которую необходимо заказать</param>
         /// <param name="chunkSize">Максимальное количество в заказе</param>
+        /// <param name="minCount">Минимальное количество в заказе</param>
         /// <param name="maxCount">Максимальное количество заказов</param>
-        void Enqueue(Tyre tyre, int chunkSize, int maxCount);
+        void Enqueue(Tyre tyre, int chunkSize, int minCount, int maxCount);
     }
 }

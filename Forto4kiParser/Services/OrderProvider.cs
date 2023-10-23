@@ -39,7 +39,7 @@ namespace Forto4kiParser.Services
             _logger.LogInformation($"Добавили в очередь {chunkCount + remainder} заказов по {chunkSize} шин {tyre.Sae}");
         }
 
-        public void Enqueue(Tyre tyre, int chunkSize, int maxCount)
+        public void Enqueue(Tyre tyre, int chunkSize, int minCount, int maxCount)
         {
             // Есть склад где кол-во >40, заказываем сколько есть
             var warehouse = tyre.Warehouses.FirstOrDefault(x => !int.TryParse(x.Stock, out _));
@@ -57,7 +57,7 @@ namespace Forto4kiParser.Services
             foreach (var house in tyre.Warehouses)
             {
                 int.TryParse(house.Stock, out var stock);
-                if (stock > 0)
+                if (stock > 0 && stock >= minCount)
                 {
                     if (remain <= stock)
                     {
