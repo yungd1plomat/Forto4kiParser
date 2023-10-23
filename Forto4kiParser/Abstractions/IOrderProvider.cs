@@ -8,9 +8,9 @@ namespace Forto4kiParser.Abstractions
         /// Получает шину из очереди на заказ
         /// </summary>
         /// <returns>
-        /// Объект Шина - количество
+        /// Объект Заказ
         /// </returns>
-        KeyValuePair<Tyre, int>? GetQueueOrder();
+        Order? GetQueueOrder();
 
         /// <summary>
         /// Добавляет шину на заказ в очередь

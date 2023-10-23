@@ -33,9 +33,9 @@ namespace Forto4kiParser.Services
             _messageQueue.Enqueue(messageParams);
         }
 
-        public void EnqueueOrder(Tyre tyre, bool isSuccess, int quantity)
+        public void EnqueueOrder(Tyre tyre, bool isSuccess, string orderUrl, int quantity)
         {
-            var description = GenerateOrderDescription(tyre, isSuccess, quantity);
+            var description = GenerateOrderDescription(tyre, isSuccess, orderUrl, quantity);
             var photoUrl = tyre.PhotoUrl;
             var messageParams = new MessageParams()
             {
@@ -46,7 +46,7 @@ namespace Forto4kiParser.Services
             _messageQueue.Enqueue(messageParams);
         }
 
-        public string GenerateOrderDescription(Tyre tyre, bool isSuccess, int quantity)
+        public string GenerateOrderDescription(Tyre tyre, bool isSuccess, string orderUrl, int quantity)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("*Новый заказ*");
@@ -71,6 +71,11 @@ namespace Forto4kiParser.Services
 
             sb.Append("*Количество*: ");
             sb.Append(quantity);
+
+            sb.AppendLine();
+            sb.AppendLine();
+
+            sb.Append($"[Ссылка]({orderUrl})");
             return sb.ToString();
         }
 

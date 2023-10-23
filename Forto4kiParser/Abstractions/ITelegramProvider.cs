@@ -27,17 +27,18 @@ namespace Forto4kiParser.Abstractions
         /// </summary>
         /// <param name="tyre">Шина</param>
         /// <param name="isSuccess">Статус ответа</param>
+        /// <param name="orderUrl">Url адрес заказа</param>
         /// <param name="quantity">Количество</param>
-        void EnqueueOrder(Tyre tyre, bool isSuccess, int quantity);
-
+        void EnqueueOrder(Tyre tyre, bool isSuccess, string orderUrl, int quantity);
 
         /// <summary>
         /// Генерирует описание для заказа
         /// </summary>
         /// <param name="tyre">Шина</param>
         /// <param name="isSuccess">Статус ответа</param>
+        /// <param name="orderUrl">Url адрес заказа</param>
         /// <param name="quantity">Количество</param>
         /// <returns></returns>
-        string GenerateOrderDescription(Tyre tyre, bool isSuccess, int quantity);
+        string GenerateOrderDescription(Tyre tyre, bool isSuccess, string orderUrl, int quantity);
     }
 }
