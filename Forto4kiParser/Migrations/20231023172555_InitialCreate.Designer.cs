@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forto4kiParser.Migrations
 {
     [DbContext(typeof(AppDb))]
-    [Migration("20231023075454_AddMinCount")]
-    partial class AddMinCount
+    [Migration("20231023172555_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,9 @@ namespace Forto4kiParser.Migrations
 
                     b.Property<bool>("DistantWarehouses")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Exclusions")
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("Manufacturer")
                         .HasColumnType("int");

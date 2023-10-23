@@ -20,11 +20,7 @@ namespace Forto4kiParser
                 try
                 {
                     var db = services.GetRequiredService<AppDb>();
-                    var isCreated = await db.Database.EnsureCreatedAsync();
-                    if (isCreated)
-                    {
-                        await db.Database.MigrateAsync();
-                    }
+                    await db.Database.MigrateAsync().ConfigureAwait(true);
                 }
                 catch (Exception ex)
                 {
@@ -33,7 +29,7 @@ namespace Forto4kiParser
                 }
             }
 
-            host.Run();
+            await host.RunAsync().ConfigureAwait(true);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
