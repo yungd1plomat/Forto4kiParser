@@ -1,5 +1,8 @@
 ﻿using Forto4kiParser.Abstractions;
+using Forto4kiParser.Helpers;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Forto4kiParser.Services
 {
@@ -17,6 +20,7 @@ namespace Forto4kiParser.Services
                                                       <ns2:OrderProduct>
                                                           <ns2:code>CODE</ns2:code>
                                                           <ns2:quantity>QUANTITY</ns2:quantity>
+                                                          <ns2:wrh>WAREHOUSE</ns2:wrh>
                                                       </ns2:OrderProduct>
                                                   </ns2:product_list>
                                               </ns1:order>
@@ -64,21 +68,30 @@ namespace Forto4kiParser.Services
                 var order = _orderProvider.GetQueueOrder();
                 if (order is not null)
                 {
-                    var tyre = order.Value.Key;
-                    var quantity = order.Value.Value;
                     using (var req = new HttpRequestMessage(HttpMethod.Post, BaseUrl))
                     {
+                        var wrhId = WarehouseHelper.GetWrhIdByName(order.Warehouse.Name);
                         var body = template.Replace("LOGIN", _login)
                             .Replace("PASSWORD", _password)
                             .Replace("IS_TEST", "false")
-                            .Replace("CODE", tyre.Sae)
-                            .Replace("QUANTITY", quantity.ToString());
+                            .Replace("CODE", order.Tyre.Sae)
+                            .Replace("QUANTITY", order.Quantity.ToString())
+                            .Replace("WAREHOUSE", wrhId);
                         req.Content = new StringContent(body, Encoding.UTF8, "text/xml");
                         req.Headers.Add("SOAPAction", Action);
                         var resp = await _client.SendAsync(req);
                         var response = await resp.Content.ReadAsStringAsync();
-                        _telegramProvider.EnqueueOrder(tyre, resp.IsSuccessStatusCode, quantity);
-                        _logger.LogInformation($"New order {tyre.Sae} with {resp.StatusCode}");
+
+                        XmlDocument xmlDoc = new XmlDocument();
+                        xmlDoc.LoadXml(response);
+                        XmlNamespaceManager ns = new XmlNamespaceManager(xmlDoc.NameTable);
+                        ns.AddNamespace("a", "http://schemas.datacontract.org/2004/07/TS3.Domain.Models.Client.ClientSoapService.CreateOrder");
+
+                        var orderUrl = xmlDoc?.SelectSingleNode("//a:URL", ns)?.InnerText;
+                        var orderSuccess = xmlDoc?.SelectSingleNode("//a:success", ns)?.InnerText;
+                        bool.TryParse(orderSuccess, out bool isSuccess);
+                        _telegramProvider.EnqueueOrder(order.Tyre, isSuccess, orderUrl, order.Quantity);
+                        _logger.LogInformation($"New order {order.Tyre.Sae} with {resp.StatusCode} on {order.Warehouse.Name}");
                     }
                 }
                 await Task.Delay(Delay);

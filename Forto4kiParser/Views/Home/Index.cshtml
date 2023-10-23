@@ -149,8 +149,10 @@
                                 <label class="form-check-label" for="autobuy">Покупать автоматически</label>
                                 <input type="checkbox" value="true" class="form-check-input" id="autobuy" name="AutoBuy">
                             </div>
+                            <input name="MinCount" type="number" placeholder="Минимальное кол-во в заказе" min="0" class="form-control mb-2">
                             <input name="ChunkSize" type="number" placeholder="Максимальное кол-во в заказе" min="1" class="form-control mb-2">
-                            <input class="form-control" type="number" min="1" placeholder="Максимальное кол-во всего" name="MaxCount">
+                            <input class="form-control mb-2" type="number" min="1" placeholder="Максимальное кол-во всего" name="MaxCount">
+                            <textarea class="form-control mb-2" rows="3" placeholder="Игнорируемые шины" name="Exclusions"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Добавить</button>
                     </form>

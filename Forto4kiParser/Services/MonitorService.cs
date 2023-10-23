@@ -47,6 +47,7 @@ namespace Forto4kiParser.Services
                     foreach (var filter in filters) 
                     {
                         var tyres = await _parserService.GetTyres(filter);
+                        var ignoreTyres = filter.Exclusions?.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (var tyre in tyres)
                         {
                             if (!_cache.TryGetValue(tyre.Sae, out _))
@@ -56,9 +57,14 @@ namespace Forto4kiParser.Services
                                     AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24)
                                 });
                                 _telegramProvider.Enqueue(tyre);
-                                if (filter.AutoBuy && filter.ChunkSize is not null && filter.MaxCount is not null)
+                                var ignored = ignoreTyres?.Contains(tyre.Sae) ?? false;
+                                if (filter.AutoBuy &&
+                                    filter.ChunkSize is not null &&
+                                    filter.MaxCount is not null &&
+                                    filter.MinCount is not null &&
+                                    !ignored)
                                 {
-                                    _orderProvider.Enqueue(tyre, (int)filter.ChunkSize, (int)filter.MaxCount);
+                                    _orderProvider.Enqueue(tyre, (int)filter.ChunkSize, (int)filter.MinCount, (int)filter.MaxCount);
                                 }
                                 parsed++;
                             }

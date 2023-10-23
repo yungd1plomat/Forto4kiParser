@@ -8,58 +8,73 @@ namespace Forto4kiParser.Services
     {
         private readonly ILogger _logger;
 
-        private readonly ConcurrentQueue<KeyValuePair<Tyre, int>> _orderQueue;
+        private readonly ConcurrentQueue<Order> _orderQueue;
 
         public OrderProvider(ILogger<OrderProvider> logger) 
         {
             _logger = logger;
-            _orderQueue = new ConcurrentQueue<KeyValuePair<Tyre, int>>();
+            _orderQueue = new ConcurrentQueue<Order>();
         }
 
-        private void Enqueue(Tyre tyre, int chunkSize, int chunkCount, int remainder)
+        private void Enqueue(Tyre tyre, Warehouse warehouse, int chunkSize, int chunkCount, int remainder)
         {
             for (int i = 0; i < chunkCount; i++)
             {
-                _orderQueue.Enqueue(new KeyValuePair<Tyre, int>(tyre, chunkSize));
+                _orderQueue.Enqueue(new Order()
+                {
+                    Tyre = tyre,
+                    Warehouse = warehouse,
+                    Quantity = chunkSize,
+                });
             }
             if (remainder > 0)
             {
-                _orderQueue.Enqueue(new KeyValuePair<Tyre, int>(tyre, remainder));
+                _orderQueue.Enqueue(new Order() 
+                {
+                    Tyre = tyre,
+                    Warehouse = warehouse,
+                    Quantity = remainder,
+                });
             }
             _logger.LogInformation($"Добавили в очередь {chunkCount + remainder} заказов по {chunkSize} шин {tyre.Sae}");
         }
 
-        public void Enqueue(Tyre tyre, int chunkSize, int maxCount)
+        public void Enqueue(Tyre tyre, int chunkSize, int minCount, int maxCount)
         {
             // Есть склад где кол-во >40, заказываем сколько есть
-            if (tyre.Warehouses.Any(x => !int.TryParse(x.Stock, out var quantity) || quantity >= maxCount))
+            var warehouse = tyre.Warehouses.FirstOrDefault(x => !int.TryParse(x.Stock, out _));
+            int.TryParse(warehouse?.Stock, out var quantity);
+            if (warehouse != null || quantity >= maxCount)
             {
                 int chunkCount = maxCount / chunkSize;
                 int remainder = maxCount % chunkSize;
-                Enqueue(tyre, chunkSize, chunkCount, remainder);
+                Enqueue(tyre, warehouse, chunkSize, chunkCount, remainder);
                 return;
             }
-            int remain = maxCount;
+
             // Заказываем все что есть на складах до максимального количества
-            foreach (var warehouse in tyre.Warehouses)
+            int remain = maxCount;
+            foreach (var house in tyre.Warehouses)
             {
-                int.TryParse(warehouse.Stock, out var quantity);
-                if (quantity > 0)
+                int.TryParse(house.Stock, out var stock);
+                if (stock > 0 && stock >= minCount)
                 {
-                    if (remain <= quantity)
+                    if (remain <= stock)
                     {
-                        Enqueue(tyre, quantity, 1, 0);
+                        int chunks = 1;
+                        int remains = 0;
+                        Enqueue(tyre, house, stock, chunks, remains);
                         return;
                     }
-                    int chunkCount = quantity / chunkSize;
-                    int remainder = quantity % chunkSize;
-                    Enqueue(tyre, chunkSize, chunkCount, remainder);
-                    remain -= quantity;
+                    int chunkCount = stock / chunkSize;
+                    int remainder = stock % chunkSize;
+                    Enqueue(tyre, house, chunkSize, chunkCount, remainder);
+                    remain -= stock;
                 }
             }
         }
 
-        public KeyValuePair<Tyre, int>? GetQueueOrder()
+        public Order? GetQueueOrder()
         {
             if (!_orderQueue.TryDequeue(out var order))
                 return null;

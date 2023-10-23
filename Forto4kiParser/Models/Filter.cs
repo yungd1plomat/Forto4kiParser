@@ -26,7 +26,11 @@ namespace Forto4kiParser.Models
 
         public int? ChunkSize { get; set; }
 
+        public int? MinCount { get; set; }
+
         public int? MaxCount { get; set; }
+
+        public string? Exclusions { get; set; }
 
         public Manufacturer? Manufacturer { get; set; }
 
