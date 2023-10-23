@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forto4kiParser.Migrations
 {
     [DbContext(typeof(AppDb))]
-    [Migration("20231023074921_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20231023075454_AddMinCount")]
+    partial class AddMinCount
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,9 @@ namespace Forto4kiParser.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("MaxCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MinCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
