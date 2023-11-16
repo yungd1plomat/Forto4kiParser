@@ -31,7 +31,7 @@ namespace Forto4kiParser
             services.AddHostedService(service => new TelegramService(botToken, service.GetRequiredService<ITelegramProvider>()));
             services.AddHostedService<OrderService>();
             services.AddHostedService<MonitorService>();
-            services.AddHostedService<CancelOrderService>();
+            //services.AddHostedService<CancelOrderService>();
             services.AddControllersWithViews();
         }
 
