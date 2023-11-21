@@ -8,6 +8,9 @@ namespace Forto4kiParser.Services
 {
     public class OrderService : BackgroundService, IDisposable
     {
+        // ЧЛ Казанцев Ярослав Романович (Договор Договор 2252 М/Аф-др от 13.06.2023), Частное лицо
+        const string customerId = "26730";
+
         const string template = @"<?xml version=""1.0"" encoding=""UTF-8""?>
                                   <SOAP-ENV:Envelope xmlns:SOAP-ENV=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:ns1=""Wcf.ClientService.Client.WebAPI.TS3"" xmlns:ns2=""http://schemas.datacontract.org/2004/07/TS3.Domain.Models.Client.ClientSoapService.CreateOrder"">
                                       <SOAP-ENV:Body>
@@ -16,6 +19,7 @@ namespace Forto4kiParser.Services
                                               <ns1:password>PASSWORD</ns1:password>
                                               <ns1:order>
                                                   <ns2:is_test>IS_TEST</ns2:is_test>
+                                                  <ns2:customerId>CUSTOMERID</ns2:customerId>
                                                   <ns2:product_list>
                                                       <ns2:OrderProduct>
                                                           <ns2:code>CODE</ns2:code>
@@ -75,6 +79,7 @@ namespace Forto4kiParser.Services
                             .Replace("PASSWORD", _password)
                             .Replace("IS_TEST", "false")
                             .Replace("CODE", order.Tyre.Sae)
+                            .Replace("CUSTOMERID", customerId)
                             .Replace("QUANTITY", order.Quantity.ToString())
                             .Replace("WAREHOUSE", wrhId);
                         req.Content = new StringContent(body, Encoding.UTF8, "text/xml");
